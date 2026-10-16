@@ -1,4 +1,4 @@
-package groups.entity;
+package com.copick.groups.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

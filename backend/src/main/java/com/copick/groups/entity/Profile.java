@@ -1,10 +1,10 @@
-package groups.entity;
+package com.copick.profiles.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "profiles")
@@ -20,6 +20,9 @@ public class Profile {
     @Column(name = "nickname", nullable = false, unique = true, length = 32)
     private String nickname;
 
+    @Column(name = "password_hash", length = 255)
+    private String passwordHash;
+
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 }

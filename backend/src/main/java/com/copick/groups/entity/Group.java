@@ -1,10 +1,10 @@
-package groups.entity;
+package com.copick.groups.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "groups")
@@ -27,5 +27,5 @@ public class Group {
     private Short ageRestriction;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 }

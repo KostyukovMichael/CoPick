@@ -1,17 +1,17 @@
-package groups.entity;
+package com.copick.groups.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "group_members")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(GroupMemberId.class) // Связываем с классом ключа
+@IdClass(GroupMemberId.class)
 public class GroupMember {
     @Id
     @Column(name = "group_id")
@@ -25,5 +25,5 @@ public class GroupMember {
     private String role;
 
     @Column(name = "joined_at")
-    private LocalDateTime joinedAt;
+    private OffsetDateTime joinedAt;
 }
