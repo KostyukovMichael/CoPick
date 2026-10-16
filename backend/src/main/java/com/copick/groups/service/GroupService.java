@@ -1,9 +1,9 @@
-package groups.service;
+package com.copick.groups.service;
 
-import groups.entity.Group;
-import groups.entity.GroupMember;
-import groups.repository.GroupRepository;
-import groups.repository.GroupMemberRepository;
+import com.copick.groups.entity.Group;
+import com.copick.groups.entity.GroupMember;
+import com.copick.groups.repository.GroupMemberRepository;
+import com.copick.groups.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

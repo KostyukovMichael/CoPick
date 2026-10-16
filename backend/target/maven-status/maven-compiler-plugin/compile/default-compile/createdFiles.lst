@@ -1,0 +1,17 @@
+com/copick/preferences/service/PreferenceService$PreferenceUpdateDto.class
+com/copick/groups/entity/Group.class
+com/copick/groups/entity/GroupMember.class
+com/copick/preferences/repository/PreferenceHistoryRepository.class
+com/copick/groups/repository/GroupRepository.class
+com/copick/groups/service/GroupService.class
+com/copick/preferences/service/PreferenceService.class
+com/copick/preferences/repository/ProfilePreferenceRepository.class
+com/copick/preferences/entity/PreferenceHistory.class
+com/copick/groups/repository/GroupMemberRepository.class
+com/copick/profiles/entity/Profile.class
+com/copick/preferences/entity/Genre.class
+com/copick/preferences/entity/ContentType.class
+com/copick/preferences/entity/ProfilePreference.class
+com/copick/preferences/entity/ProfilePreferenceId.class
+com/copick/CopickApplication.class
+com/copick/groups/entity/GroupMemberId.class

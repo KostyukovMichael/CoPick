@@ -1,0 +1,16 @@
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/CopickApplication.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/preferences/service/PreferenceService.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/preferences/entity/ContentType.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/groups/service/GroupService.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/groups/entity/GroupMember.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/preferences/entity/PreferenceHistory.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/groups/entity/Group.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/groups/entity/GroupMemberId.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/preferences/repository/ProfilePreferenceRepository.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/groups/repository/GroupRepository.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/preferences/entity/ProfilePreference.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/preferences/entity/Genre.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/profiles/entity/Profile.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/groups/repository/GroupMemberRepository.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/preferences/entity/ProfilePreferenceId.java
+/mnt/c/Users/masj2/IdeaProjects/CoPick/CoPick/backend/src/main/java/com/copick/preferences/repository/PreferenceHistoryRepository.java
