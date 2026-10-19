@@ -1,14 +1,17 @@
 package com.copick.groups.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.time.OffsetDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "group_members")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @IdClass(GroupMemberId.class)
@@ -21,9 +24,11 @@ public class GroupMember {
     @Column(name = "profile_id")
     private Integer profileId;
 
+    @Convert(converter = GroupRoleConverter.class)
     @Column(name = "role", nullable = false, length = 16)
-    private String role;
+    private GroupRole role;
 
-    @Column(name = "joined_at")
+    @CreationTimestamp
+    @Column(name = "joined_at", updatable = false)
     private OffsetDateTime joinedAt;
 }

@@ -1,15 +1,18 @@
 package com.copick.preferences.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "profile_preferences")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @IdClass(ProfilePreferenceId.class)
@@ -23,8 +26,9 @@ public class ProfilePreference {
     private Integer genreId;
 
     @Column(name = "weight", nullable = false, precision = 3, scale = 2)
-    private BigDecimal weight; // numeric(3,2) от -1 до 1
+    private BigDecimal weight;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 }

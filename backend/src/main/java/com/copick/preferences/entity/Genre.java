@@ -2,12 +2,19 @@ package com.copick.preferences.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "genres")
-@Data
+@Table(
+    name = "genres",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "uk_genre_name_content_type",
+            columnNames = {"genre_name", "content_type"}))
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Genre {
