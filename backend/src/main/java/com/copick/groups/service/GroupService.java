@@ -2,12 +2,15 @@ package com.copick.groups.service;
 
 import com.copick.groups.entity.Group;
 import com.copick.groups.entity.GroupMember;
+import com.copick.groups.entity.GroupMemberId;
 import com.copick.groups.entity.GroupRole;
 import com.copick.groups.exception.AlreadyMemberException;
 import com.copick.groups.exception.GroupNotFoundException;
 import com.copick.groups.exception.InviteCodeGenerationException;
 import com.copick.groups.repository.GroupMemberRepository;
 import com.copick.groups.repository.GroupRepository;
+import com.copick.profiles.entity.Profile;
+import com.copick.profiles.repository.ProfileRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final ProfileRepository profileRepository;
 
     /** Создает новую группу и делает создателя владельцем */
     @Transactional
@@ -33,9 +37,11 @@ public class GroupService {
 
         group = groupRepository.save(group);
 
+        Profile creatorRef = profileRepository.getReferenceById(creatorProfileId);
+
         GroupMember member = new GroupMember();
-        member.setGroupId(group.getGroupId());
-        member.setProfileId(creatorProfileId);
+        member.setGroup(group);
+        member.setProfile(creatorRef);
         member.setRole(GroupRole.OWNER);
         groupMemberRepository.save(member);
 
@@ -50,23 +56,22 @@ public class GroupService {
                 .findByInviteCode(inviteCode)
                 .orElseThrow(() -> new GroupNotFoundException(inviteCode));
 
-        if (groupMemberRepository.existsByGroupIdAndProfileId(group.getGroupId(), profileId)) {
+        if (groupMemberRepository.existsById(new GroupMemberId(group.getGroupId(), profileId))) {
           throw new AlreadyMemberException(group.getGroupId(), profileId);
         }
 
+        Profile profileRef = profileRepository.getReferenceById(profileId);
+
         GroupMember member = new GroupMember();
-        member.setGroupId(group.getGroupId());
-        member.setProfileId(profileId);
+        member.setGroup(group);
+        member.setProfile(profileRef);
         member.setRole(GroupRole.MEMBER);
         groupMemberRepository.save(member);
 
         return group;
     }
 
-    /**
-    * Генерирует invite-код с защитой от коллизий. Делает до MAX_INVITE_CODE_ATTEMPTS
-    * попыток проверить уникальность через репозиторий.
-    */
+    /** Генерирует invite-код с защитой от коллизий. */
     private String generateUniqueInviteCode() {
         for (int attempt = 0; attempt < MAX_INVITE_CODE_ATTEMPTS; attempt++) {
             String code = UUID.randomUUID().toString().substring(0, INVITE_CODE_LENGTH).toUpperCase();

@@ -1,11 +1,16 @@
 package com.copick.preferences.service;
 
 import com.copick.preferences.dto.PreferenceUpdateDto;
+import com.copick.preferences.entity.Genre;
 import com.copick.preferences.entity.PreferenceHistory;
 import com.copick.preferences.entity.ProfilePreference;
+import com.copick.preferences.entity.ProfilePreferenceId;
 import com.copick.preferences.exception.InvalidWeightException;
+import com.copick.preferences.repository.GenreRepository;
 import com.copick.preferences.repository.PreferenceHistoryRepository;
 import com.copick.preferences.repository.ProfilePreferenceRepository;
+import com.copick.profiles.entity.Profile;
+import com.copick.profiles.repository.ProfileRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +28,8 @@ public class PreferenceService {
 
     private final ProfilePreferenceRepository preferenceRepository;
     private final PreferenceHistoryRepository historyRepository;
+    private final ProfileRepository profileRepository;
+    private final GenreRepository genreRepository;
 
     @Transactional
     public void updatePreferences(Integer profileId, List<PreferenceUpdateDto> updates) {
@@ -30,15 +37,20 @@ public class PreferenceService {
             validateWeight(dto.getWeight());
         }
 
+        Profile profileRef = profileRepository.getReferenceById(profileId);
+
         for (PreferenceUpdateDto dto : updates) {
+            ProfilePreferenceId id = new ProfilePreferenceId(profileId, dto.getGenreId());
+            Genre genreRef = genreRepository.getReferenceById(dto.getGenreId());
+
             ProfilePreference pref = preferenceRepository
-                    .findByProfileIdAndGenreId(profileId, dto.getGenreId())
-                    .orElseGet(() -> {
-                        ProfilePreference newPref = new ProfilePreference();
-                        newPref.setProfileId(profileId);
-                        newPref.setGenreId(dto.getGenreId());
-                        return newPref;
-                    });
+                .findById(id)
+                .orElseGet(() -> {
+                    ProfilePreference newPref = new ProfilePreference();
+                    newPref.setProfile(profileRef);
+                    newPref.setGenre(genreRef);
+                    return newPref;
+                });
 
             BigDecimal oldWeight = pref.getWeight();
 
@@ -46,8 +58,8 @@ public class PreferenceService {
             preferenceRepository.save(pref);
 
             PreferenceHistory history = new PreferenceHistory();
-            history.setProfileId(profileId);
-            history.setGenreId(dto.getGenreId());
+            history.setProfile(profileRef);
+            history.setGenre(genreRef);
             history.setOldWeight(oldWeight);
             history.setNewWeight(dto.getWeight());
             historyRepository.save(history);

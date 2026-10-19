@@ -1,5 +1,6 @@
 package com.copick.groups.entity;
 
+import com.copick.profiles.entity.Profile;
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
@@ -14,15 +15,18 @@ import org.hibernate.annotations.CreationTimestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(GroupMemberId.class)
 public class GroupMember {
-    @Id
-    @Column(name = "group_id")
-    private Integer groupId;
+    @EmbeddedId private GroupMemberId id;
 
-    @Id
-    @Column(name = "profile_id")
-    private Integer profileId;
+    @MapsId("groupId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
+    private Group group;
+
+    @MapsId("profileId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
 
     @Convert(converter = GroupRoleConverter.class)
     @Column(name = "role", nullable = false, length = 16)

@@ -1,5 +1,6 @@
 package com.copick.preferences.entity;
 
+import com.copick.profiles.entity.Profile;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -15,15 +16,18 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(ProfilePreferenceId.class)
 public class ProfilePreference {
-    @Id
-    @Column(name = "profile_id")
-    private Integer profileId;
+    @EmbeddedId private ProfilePreferenceId id;
 
-    @Id
-    @Column(name = "genre_id")
-    private Integer genreId;
+    @MapsId("profileId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
+
+    @MapsId("genreId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "genre_id")
+    private Genre genre;
 
     @Column(name = "weight", nullable = false, precision = 3, scale = 2)
     private BigDecimal weight;

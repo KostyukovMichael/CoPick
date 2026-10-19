@@ -26,6 +26,7 @@ public class Genre {
     @Column(name = "genre_name", nullable = false, length = 30)
     private String genreName;
 
-    @Column(name = "content_type", nullable = false)
-    private Integer contentType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "content_type", nullable = false)
+    private ContentType contentType;
 }

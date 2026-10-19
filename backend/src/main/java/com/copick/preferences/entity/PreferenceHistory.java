@@ -1,5 +1,6 @@
 package com.copick.preferences.entity;
 
+import com.copick.profiles.entity.Profile;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -21,11 +22,13 @@ public class PreferenceHistory {
     @Column(name = "history_id")
     private Integer historyId;
 
-    @Column(name = "profile_id", nullable = false)
-    private Integer profileId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id", nullable = false)
+    private Profile profile;
 
-    @Column(name = "genre_id", nullable = false)
-    private Integer genreId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "genre_id", nullable = false)
+    private Genre genre;
 
     @Column(name = "old_weight", precision = 3, scale = 2)
     private BigDecimal oldWeight;
