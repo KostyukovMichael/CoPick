@@ -3,6 +3,9 @@ package com.copick.groups.service;
 import com.copick.groups.entity.Group;
 import com.copick.groups.entity.GroupMember;
 import com.copick.groups.entity.GroupRole;
+import com.copick.groups.exception.AlreadyMemberException;
+import com.copick.groups.exception.GroupNotFoundException;
+import com.copick.groups.exception.InviteCodeGenerationException;
 import com.copick.groups.repository.GroupMemberRepository;
 import com.copick.groups.repository.GroupRepository;
 import java.util.UUID;
@@ -20,7 +23,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final GroupMemberRepository groupMemberRepository;
 
-    /** Создает новую группу и делает создателя админом */
+    /** Создает новую группу и делает создателя владельцем */
     @Transactional
     public Group createGroup(String name, Short ageRestriction, Integer creatorProfileId) {
         Group group = new Group();
@@ -30,7 +33,6 @@ public class GroupService {
 
         group = groupRepository.save(group);
 
-        // Добавляем создателя как владельца
         GroupMember member = new GroupMember();
         member.setGroupId(group.getGroupId());
         member.setProfileId(creatorProfileId);
@@ -46,11 +48,10 @@ public class GroupService {
         Group group =
             groupRepository
                 .findByInviteCode(inviteCode)
-                .orElseThrow(() -> new RuntimeException("Группа с таким кодом не найдена"));
+                .orElseThrow(() -> new GroupNotFoundException(inviteCode));
 
-        // Проверка, не состоит ли уже пользователь в группе
         if (groupMemberRepository.existsByGroupIdAndProfileId(group.getGroupId(), profileId)) {
-            throw new RuntimeException("Вы уже состоите в этой группе");
+          throw new AlreadyMemberException(group.getGroupId(), profileId);
         }
 
         GroupMember member = new GroupMember();
@@ -73,10 +74,6 @@ public class GroupService {
                 return code;
             }
         }
-
-        throw new IllegalStateException(
-            "Не удалось сгенерировать уникальный invite-код за "
-            + MAX_INVITE_CODE_ATTEMPTS
-            + " попыток");
+        throw new InviteCodeGenerationException(MAX_INVITE_CODE_ATTEMPTS);
     }
 }
