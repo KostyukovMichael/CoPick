@@ -11,7 +11,6 @@ import com.copick.preferences.repository.PreferenceHistoryRepository;
 import com.copick.preferences.repository.ProfilePreferenceRepository;
 import com.copick.profiles.entity.Profile;
 import com.copick.profiles.repository.ProfileRepository;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PreferenceService {
 
-    private static final BigDecimal WEIGHT_MIN = BigDecimal.ONE.negate(); // -1
-    private static final BigDecimal WEIGHT_MAX = BigDecimal.ONE; //  1
+    private static final Double WEIGHT_MIN = -1.0;
+    private static final Double WEIGHT_MAX = 1.0;
 
     private final ProfilePreferenceRepository preferenceRepository;
     private final PreferenceHistoryRepository historyRepository;
@@ -52,7 +51,7 @@ public class PreferenceService {
                     return newPref;
                 });
 
-            BigDecimal oldWeight = pref.getWeight();
+            Double oldWeight = pref.getWeight();
 
             pref.setWeight(dto.getWeight());
             preferenceRepository.save(pref);
@@ -75,69 +74,13 @@ public class PreferenceService {
         return preferenceRepository.findByProfileId(profileId);
     }
 
-    /** Сбрасывает конкретное предпочтение пользователя. */
-    @Transactional
-    public void resetPreference(Integer profileId, Integer genreId) {
-        ProfilePreferenceId id = new ProfilePreferenceId(profileId, genreId);
-
-        Optional<ProfilePreference> existing = preferenceRepository.findById(id);
-        if (existing.isEmpty()) {
-            return;
-        }
-
-        ProfilePreference pref = existing.get();
-        BigDecimal oldWeight = pref.getWeight();
-
-        PreferenceHistory history = new PreferenceHistory();
-        history.setProfile(pref.getProfile());
-        history.setGenre(pref.getGenre());
-        history.setOldWeight(oldWeight);
-        history.setNewWeight(null);
-        historyRepository.save(history);
-
-        preferenceRepository.delete(pref);
-
-        log.info("Сброшено предпочтение: profile={}, genre={}, old={}", profileId, genreId, oldWeight);
-    }
-
-    /**
-    * Сбрасывает все предпочтения пользователя.
-    *
-    * @return количество удалённых предпочтений
-    */
-    @Transactional
-    public int resetAllPreferences(Integer profileId) {
-        List<ProfilePreference> prefs = preferenceRepository.findByProfileId(profileId);
-
-        if (prefs.isEmpty()) {
-            return 0;
-        }
-
-        for (ProfilePreference pref : prefs) {
-            BigDecimal oldWeight = pref.getWeight();
-
-            PreferenceHistory history = new PreferenceHistory();
-            history.setProfile(pref.getProfile());
-            history.setGenre(pref.getGenre());
-            history.setOldWeight(oldWeight);
-            history.setNewWeight(null);
-            historyRepository.save(history);
-
-            preferenceRepository.delete(pref);
-        }
-
-        log.info("Сброшены все предпочтения профиля {}: {} шт.", profileId, prefs.size());
-
-        return prefs.size();
-    }
-
     /** Возвращает историю изменений предпочтений пользователя, отсортированную от новых к старым. */
     @Transactional(readOnly = true)
     public List<PreferenceHistory> getPreferenceHistory(Integer profileId) {
         return historyRepository.findByProfileIdOrderByChangedAtDesc(profileId);
     }
 
-    private void validateWeight(BigDecimal weight) {
+    private void validateWeight(Double weight) {
         if (weight == null) {
             throw new InvalidWeightException();
         }
